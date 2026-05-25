@@ -1,0 +1,24 @@
+---
+description: TypeScript と React 19 の実装規約
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# TypeScript / React
+
+## TypeScript
+
+- 型安全を優先。`any` の乱用と無理由の `@ts-ignore` を避ける。
+- ESLint（`npm run lint`）の指摘を解消する。
+
+## React 19（React Compiler 有効）
+
+- 関数コンポーネントと Hooks のルールに従う。
+- 状態は最小限。不要な `useEffect` を書かない。
+- 手動 `useMemo` / `useCallback` は計測上必要な場合のみ。
+- リストの `key` は安定した一意値（並び替え時は index を key にしない）。
+
+## プロジェクト整合
+
+- 変更は依頼範囲に限定し、既存の import スタイル・CSS 方式に合わせる。
+- 検証: `npm run lint`、必要なら `npm run build`。

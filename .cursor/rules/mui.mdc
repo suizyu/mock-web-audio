@@ -1,0 +1,20 @@
+---
+description: MUI (Material UI) 利用時の規約
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# MUI (Material UI)
+
+現状 MUI は未導入。使用・導入時は `agent-standards` のパッケージ許可ルールに従う。
+
+## 導入
+
+- `@mui/material` と Emotion（`@emotion/react`, `@emotion/styled`）をセットで追加。
+- `ThemeProvider` はアプリルート（`main.tsx` 付近）に一度だけ配置。
+
+## 実装
+
+- 最新 MUI の推奨 API に従う（非推奨 API は使わない）。
+- スタイルは `sx` または styled で一貫させる。
+- アクセシビリティ属性（`aria-*`, `label` 等）を削除しない。
