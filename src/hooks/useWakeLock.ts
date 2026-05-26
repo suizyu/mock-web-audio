@@ -11,6 +11,19 @@ export interface UseWakeLockReturn {
 }
 
 /**
+ * PWA かどうかを判定
+ *
+ * `display-mode: standalone` または `navigator.standalone` で
+ * インストール済み PWA かどうかを判定する。
+ */
+function isPWA(): boolean {
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as { standalone?: boolean }).standalone === true
+  )
+}
+
+/**
  * 画面スリープ防止（Screen Wake Lock API）
  *
  * @example
@@ -112,7 +125,10 @@ export function useWakeLock(): UseWakeLockReturn {
   }, [clearSentinel])
 
   useEffect(() => {
-    if (!isSupported) return
+    // PWA では visibilitychange リスナーを無効化
+    // PWA の visibility 状態は不安定で、予期しないタイミングで
+    // visibility イベントが発火し、Wake Lock が不正に保持されるため
+    if (!isSupported || isPWA()) return
 
     const onVisibilityChange = () => {
       if (document.visibilityState === 'visible' && wantsLockRef.current) {
