@@ -37,9 +37,18 @@ export function AudioLandingPage({
         </section>
 
         <footer className="landing__footer">
-          <Typography variant="body2" color="text.secondary">
-            技術検証用 PWA — オンライン専用
-          </Typography>
+          <Stack spacing={1}>
+            <Typography variant="body2" color="text.secondary">
+              技術検証用 PWA — オンライン専用
+            </Typography>
+            {recording.isWakeLockSupported && (
+              <Typography variant="caption" color="text.secondary">
+                {recording.isWakeLockActive
+                  ? '🔒 画面ロック：アクティブ'
+                  : '🔓 画面ロック：未使用'}
+              </Typography>
+            )}
+          </Stack>
         </footer>
       </Container>
     </Box>
