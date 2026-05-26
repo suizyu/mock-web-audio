@@ -55,7 +55,12 @@ export function useWakeLock(): UseWakeLockReturn {
     (sentinel: WakeLockSentinel) => {
       const onRelease = () => {
         clearSentinel()
-        // バッテリー低下等で OS が解放した場合 — wantsLock は維持し visible 時に再取得
+        // OS が解放した場合、PWA では再取得しない（スリープを許可）
+        // ブラウザ環境のみ visibility 復帰時に再取得
+        if (isPWA()) {
+          wantsLockRef.current = false
+        }
+        // バッテリー低下等で OS が解放した場合 — ブラウザなら wantsLock は維持し visible 時に再取得
       }
       sentinel.addEventListener('release', onRelease, { once: true })
     },
@@ -125,9 +130,10 @@ export function useWakeLock(): UseWakeLockReturn {
   }, [clearSentinel])
 
   useEffect(() => {
-    // PWA では visibilitychange リスナーを無効化
-    // PWA の visibility 状態は不安定で、予期しないタイミングで
-    // visibility イベントが発火し、Wake Lock が不正に保持されるため
+    // ブラウザ環境のみ visibilitychange リスナーを設定
+    // PWA では visibility イベントが不安定で、OS による強制解放時には
+    // release リスナー側で wantsLockRef をリセットするため、
+    // ここで visibility 復帰時に再取得しない
     if (!isSupported || isPWA()) return
 
     const onVisibilityChange = () => {
