@@ -23,7 +23,7 @@ export default defineConfig({
         background_color: '#f5f7fa',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
+        start_url: '/mock-web-audio/',
         lang: 'ja',
         icons: [
           {
