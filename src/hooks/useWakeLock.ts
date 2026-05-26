@@ -129,6 +129,26 @@ export function useWakeLock(): UseWakeLockReturn {
     }
   }, [clearSentinel])
 
+  // マウント時に PWA の既存 Wake Lock をリセット
+  useEffect(() => {
+    if (!isSupported || !isPWA()) return
+
+    // PWA マウント時に強制的に Wake Lock をリリース
+    void (async () => {
+      try {
+        const sentinel = sentinelRef.current
+        if (sentinel && !sentinel.released) {
+          await sentinel.release()
+        }
+        sentinelRef.current = null
+        setIsLocked(false)
+        wantsLockRef.current = false
+      } catch {
+        // リリース失敗は無視
+      }
+    })()
+  }, [isSupported])
+
   useEffect(() => {
     // ブラウザ環境のみ visibilitychange リスナーを設定
     // PWA では visibility イベントが不安定で、OS による強制解放時には
